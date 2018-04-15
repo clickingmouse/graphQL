@@ -1,13 +1,17 @@
 const express = require('express');
 const graphqlHTTP= require('express-graphql');
 const app = express();
-const schema = require('./schema/schema')
+const schema = require('./schema/schema');
+const cors=require('cors');
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-mongoose.connect ("mongodb://shaun:test123@ds121665.mlab.com:21665/gql-ninja")
+//allow cross-origin requests
+app.use(cors());
 
-mongoose.connection.once('open',()=>{console.log("connected to database")})
+mongoose.connect ("mongodb://shaun:test123@ds121665.mlab.com:21665/gql-ninja");
+
+mongoose.connection.once('open',()=>{console.log("connected to database")});
 
 app.use('/graphql',graphqlHTTP({
 //schmea:schema
