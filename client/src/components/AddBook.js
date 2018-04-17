@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {gql} from 'apollo-boost';
-import {graphql} from 'react-apollo';
-import {getAuthorsQuery} from '../queries/queries'
+import {graphql, compose} from 'react-apollo';
+import {getAuthorsQuery, addBookMutation} from '../queries/queries'
 //import logo from './logo.svg';
 //import './App.css';
 
@@ -17,7 +17,8 @@ class AddBook extends Component {
         }
     }
 displayAuthors(){
-    var data = this.props.data;
+    var data = this.props.getAuthorsQuery;
+    //console.log(this.props);
     if (data.loading){return(<option disabled>Loading Authors</option>)}
 else{
    return data.authors.map(author =>{
@@ -28,7 +29,16 @@ else{
 
 submitForm(e){
 e.preventDefault();
-console.log(this.state);
+//name addbookmutation named at export below
+this.props.addBookMutation({
+    variables:{
+name:this.state.name,
+genre:this.state.genre,
+authorId:this.state.authorId
+
+    }
+});
+//console.log(this.state);
 
 }
   render() {
@@ -62,4 +72,8 @@ console.log(this.state);
   }
 }
 
-export default graphql(getAuthorsQuery)(AddBook);
+export default compose(
+graphql(getAuthorsQuery,{name:"getAuthorsQuery"}),
+graphql(addBookMutation,{name:"addBookMutation"})
+    )(AddBook)
+//graphql(getAuthorsQuery)(AddBook);
